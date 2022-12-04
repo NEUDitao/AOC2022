@@ -2,10 +2,8 @@ Every year I try to trick myself into thinking I'll finish AOC this year
 
 Why not try to trick myself again?
 
-This time, I'll be doing it in Haskell, since I've always wanted to try it
-out.
+This time, I'll be doing it in Rust, since I program in it at work, but never
+really used it somewhere on my own.
 
-It's another year of using another functional programming language.
-But who knows, maybe I'll actually learn something new.
-
+Will I succeed?
 Probably not.

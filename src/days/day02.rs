@@ -2,7 +2,20 @@ use crate::{Solution, SolutionPair};
 use std::fs::read_to_string;
 
 ///////////////////////////////////////////////////////////////////////////////
-///
+
+/*
+Day 2 was pretty fun to overengineer! Maybe it's because I was originally
+going to do this in Haskell, but I'm still on a bit of a pattern-matching
+kick, and impls are fun to create. Really, I could've just done these
+all manually with string matching and stuff, but turning them into enums
+at least made it so I wouldn't have to juggle around ABC and XYZ.
+
+That's about it. I could make it possibly "cleaner" by making the same
+code non-duplicated, and then passing in some form of closure that calculates
+the strategy, but whatever, most of the AOC's can be boiled down to that, right?
+
+;)
+*/
 
 #[derive(Clone, Copy)]
 enum Chosen {
@@ -13,9 +26,9 @@ enum Chosen {
 
 #[derive(Clone, Copy)]
 enum State {
-    Loss = 0, // X
-    Draw = 3, // Y
-    Win = 6,  // Z
+    Loss = 0,
+    Draw = 3,
+    Win = 6,
 }
 
 impl From<String> for State {

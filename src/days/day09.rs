@@ -1,5 +1,8 @@
 use crate::{Solution, SolutionPair};
-use std::{collections::HashSet, fs::read_to_string};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    fs::read_to_string,
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -13,13 +16,30 @@ fn figure_dir(dir: &str) -> (i32, i32) {
     }
 }
 
+fn update(head: (i32, i32), tail: (i32, i32)) -> (i32, i32) {
+    match (head.0 - tail.0, head.1 - tail.1) {
+        (2, 0) => (tail.0 + 1, tail.1),
+        (-2, 0) => (tail.0 - 1, tail.1),
+        (0, 2) => (tail.0, tail.1 + 1),
+        (0, -2) => (tail.0, tail.1 - 1),
+        (2, 1) | (1, 2) | (2, 2) => (tail.0 + 1, tail.1 + 1),
+        (2, -1) | (1, -2) | (2, -2) => (tail.0 + 1, tail.1 - 1),
+        (-2, 1) | (-1, 2) | (-2, 2) => (tail.0 - 1, tail.1 + 1),
+        (-2, -1) | (-1, -2) | (-2, -2) => (tail.0 - 1, tail.1 - 1),
+        _ => tail,
+    }
+}
+
 pub fn solve() -> SolutionPair {
     let input = read_to_string("input/day09").unwrap();
 
-    let mut head = (0, 0);
-    let mut tail = (0, 0);
+    let mut rope_parts: BTreeMap<i32, (i32, i32)> = BTreeMap::new();
 
-    let mut seen: HashSet<(i32, i32)> = HashSet::new();
+    for i in 0..10 {
+        rope_parts.insert(i, (0, 0));
+    }
+
+    let mut seen: BTreeSet<(i32, i32)> = BTreeSet::new();
 
     for line in input.lines() {
         let mut line_as_iter = line.split_ascii_whitespace();
@@ -27,43 +47,19 @@ pub fn solve() -> SolutionPair {
         let num = str::parse::<i32>(line_as_iter.next().unwrap()).unwrap();
 
         for _n in 0..num {
-            head = (head.0 + dir.0, head.1 + dir.1);
+            let first_head = rope_parts[&0];
+            rope_parts.insert(0, (first_head.0 + dir.0, first_head.1 + dir.1));
 
-            match (head.0 - tail.0, head.1 - tail.1) {
-                (2, 0) => {
-                    tail.0 += 1;
-                }
-                (-2, 0) => {
-                    tail.0 -= 1;
-                }
-                (0, 2) => {
-                    tail.1 += 1;
-                }
-                (0, -2) => {
-                    tail.1 -= 1;
-                }
-                (2, 1) | (1, 2) => {
-                    tail.0 += 1;
-                    tail.1 += 1;
-                }
-                (2, -1) | (1, -2) => {
-                    tail.0 += 1;
-                    tail.1 -= 1;
-                }
-                (-2, 1) | (-1, 2) => {
-                    tail.0 -= 1;
-                    tail.1 += 1;
-                }
-                (-2, -1) | (-1, -2) => {
-                    tail.0 -= 1;
-                    tail.1 -= 1;
-                }
-                _ => {
-                    // do nothing case
-                    // panic!("ruh roh shaggy")
+            for rope_section in 1..10 {
+                let head = rope_parts[&(rope_section - 1)];
+                let tail = rope_parts[&rope_section];
+                let new_tail = update(head, tail);
+                rope_parts.insert(rope_section, new_tail);
+
+                if rope_section == 9 {
+                    seen.insert(tail);
                 }
             }
-            seen.insert(tail);
         }
     }
 

@@ -1,7 +1,7 @@
-use itertools::{sorted, Itertools};
+use itertools::{ Itertools};
 
 use crate::{Solution, SolutionPair};
-use std::{collections::HashMap, convert::identity, fs::read_to_string};
+use std::{collections::HashMap,  fs::read_to_string};
 
 ///////////////////////////////////////////////////////////////////////////////
 
